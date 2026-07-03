@@ -17,3 +17,6 @@ Build/
 # Visual layout build data and automated backups
 _BuiltData.uasset
 FileOpenOrder/*
+
+# Temporary content
+Content/StarterContent/*
