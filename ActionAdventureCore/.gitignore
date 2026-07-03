@@ -1,0 +1,19 @@
+# Engine transient compilation folders and local user caches
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+Build/
+.idea/
+
+# Development environment user state structures
+.vs/
+*.sln
+*.suo
+*.user
+*.userosxcache
+*.sln.docstates
+
+# Visual layout build data and automated backups
+_BuiltData.uasset
+FileOpenOrder/*
