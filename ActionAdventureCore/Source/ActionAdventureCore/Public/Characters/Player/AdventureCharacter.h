@@ -8,6 +8,9 @@
 
 class USpringArmComponent;
 class UCameraComponent;
+class UInputMappingContext;
+class UInputAction;
+struct FInputActionValue;
 
 UCLASS()
 class ACTIONADVENTURECORE_API AAdventureCharacter : public ACharacter
@@ -33,5 +36,22 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActionAdventureCore|Camera", meta = (AllowPrivateAccess="true"))
 	TObjectPtr<UCameraComponent> FollowCamera{ nullptr };
+
+	// Locomotion calculation handlers called by input engine
+	void HandleMovementInput(const FInputActionValue& Value);
+	void HandleLookInput(const FInputActionValue& Value);
+
+	// Advanced Enhanced Input asset configuration tracking hooks
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ActionAdventureCore|Input", meta = (AllowPrivateAccess="true"))
+	TObjectPtr<UInputMappingContext> DefaultMappingContext{ nullptr };
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ActionAdventureCore|Input", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> MovementAction{ nullptr };
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ActionAdventureCore|Input", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> LookAction{ nullptr };
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ActionAdventureCore|Input", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> JumpAction{ nullptr };
 
 };

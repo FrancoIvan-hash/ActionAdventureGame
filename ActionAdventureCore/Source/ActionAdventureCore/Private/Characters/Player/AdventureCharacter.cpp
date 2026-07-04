@@ -6,6 +6,11 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "InputMappingContext.h"
+#include "InputAction.h"
+#include "InputActionValue.h"
 
 // Sets default values
 AAdventureCharacter::AAdventureCharacter()
@@ -44,8 +49,18 @@ AAdventureCharacter::AAdventureCharacter()
 void AAdventureCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// Inject our Input Mapping Context directly into the local player's input subsystem
+	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			Subsystem->AddMappingContext(DefaultMappingContext, 0);
+		}
+	}
 	
 }
+
 
 // Called every frame
 void AAdventureCharacter::Tick(float DeltaTime)
@@ -61,3 +76,10 @@ void AAdventureCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 
 }
 
+void AAdventureCharacter::HandleMovementInput(const FInputActionValue& Value)
+{
+}
+
+void AAdventureCharacter::HandleLookInput(const FInputActionValue& Value)
+{
+}
