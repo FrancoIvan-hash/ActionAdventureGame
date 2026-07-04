@@ -74,12 +74,45 @@ void AAdventureCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	// Cast the default base component to an EnhancedInputComponent configuration
+	if (UEnhancedInputComponent* EnhancedComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
+	{
+		// Bind movememnt vector action tracks
+		EnhancedComponent->BindAction(MovementAction, ETriggerEvent::Triggered, this, &AAdventureCharacter::HandleMovementInput);
+		EnhancedComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AAdventureCharacter::HandleLookInput);
+		EnhancedComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
+		EnhancedComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+	}
+
 }
 
 void AAdventureCharacter::HandleMovementInput(const FInputActionValue& Value)
 {
+	FVector2D MovementVector = Value.Get<FVector2D>();
+
+	if (!Controller) return;
+
+	// Calculate the movement directions relative to the current camera view angle 
+	const FRotator ControlRotation = Controller->GetControlRotation();
+	const FRotator YawRotation(0.f, ControlRotation.Yaw, 0.f);
+
+	// Extract the forward vector track from the rotation matrix
+	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+
+	// Apply the movement input to the character's movement component
+	AddMovementInput(ForwardDirection, MovementVector.Y);
+	AddMovementInput(RightDirection, MovementVector.X);
+
 }
 
 void AAdventureCharacter::HandleLookInput(const FInputActionValue& Value)
 {
+	FVector2D LookAxisVector = Value.Get<FVector2D>();
+
+	if (!Controller) return;
+
+	// Apply the look input to the controller's pitch and yaw
+	AddControllerPitchInput(LookAxisVector.Y);
+	AddControllerYawInput(LookAxisVector.X);
 }
